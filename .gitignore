@@ -1,0 +1,93 @@
+# ============================================================
+# digital-logic-homework
+# Verilog + Vivado + RISC-V software
+# 原则：源文件入库，生成物不入库
+# ============================================================
+
+# ---------- Vivado 本地工程/缓存 ----------
+work/
+vivado*.log
+vivado*.jou
+.Xil/
+**/.Xil/
+**/.gen/
+**/.runs/
+**/.cache/
+**/.hw/
+**/.ip_user_files/
+**/.sim/
+**/.data/
+**/.logs/
+
+# ---------- Vivado 工程文件（用 scripts/recreate.tcl 重建）----------
+*.xpr
+*.xpr.user
+*.xpr.bak
+*.xpr.old
+*.xpr.*~
+*.xdc.user
+*.xdc.bak
+
+# ---------- xsim / 仿真生成物 ----------
+xsim.dir/
+**/xsim.dir/
+sim/work/
+sim/work_*/
+tb/work/
+tb/work_*/
+**/webtalk/
+**/xvlog.log
+**/xelab.log
+**/xsim.log
+*.jou
+*.log
+*.str
+*.dbg
+*.pb
+*.backup.*
+*.wdb
+*.vcd
+*.vvp
+obj_dir/
+
+# ---------- bitstream / 调试 ----------
+*.bit
+*.dcp
+*.ltx
+*.xsa
+
+# ---------- IP 生成物（.xci / .coe 要提交）----------
+*.xcix
+**/*.srcs/
+
+# ---------- 软件编译产物 ----------
+*.elf
+*.o
+*.a
+*.d
+*.exe
+*.map
+Debug/
+Release/
+sw/build/
+
+# ---------- Python ----------
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+
+# ---------- 系统/编辑器 ----------
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# ---------- 可选：提交小体积波形 ----------
+# !sim/waveforms/
+# !sim/waveforms/**
