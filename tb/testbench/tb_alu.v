@@ -22,17 +22,17 @@ module tb_alu;
             op = o; a = x; b = z;
             #1;
             checks = checks + 1;
-            if (y !== exp) begin
+            if (result !== exp) begin
                 errors = errors + 1;
                 $display("FAIL @%0t: op=%h a=%08h b=%08h got=%08h exp=%08h",
-                         $time, o, x, z, y, exp);
+                         $time, o, x, z, result, exp);
             end
         end
     endtask
 
     initial begin
         checks=16'd0;
-        erros=16'd0;
+        errors=16'd0;
 
         chk(ADD,  32'd10,         32'd20,         32'd30);
         chk(ADD,  32'h1234_5678,  32'h0000_FFFF,  32'h1235_5677);
