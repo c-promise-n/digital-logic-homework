@@ -1,6 +1,5 @@
 `timescale 1ns / 1ps
 // tb_regfile.v - self-checking testbench for regfile
-// Verilog-2001 only: no integer variables, all counters are reg, for 2019.1 xsim.
 
 module tb_regfile;
 
@@ -32,7 +31,7 @@ module tb_regfile;
     always #5 clk = ~clk;
 
     // write one register
-    task wr;
+    task automatic wr;
         input [4:0] a;
         input [31:0] d;
         begin
@@ -46,7 +45,7 @@ module tb_regfile;
     endtask
 
     // read both ports at address a and compare with expected
-    task chk;
+    task automatic chk;
         input [4:0] a;
         input [31:0] e;
         begin
@@ -76,8 +75,15 @@ module tb_regfile;
         // no reset in DUT: write every entry before reading it
         for (i = 0; i < 32; i = i + 1) begin
             wr(i[4:0], 32'hA5A50000 + i[4:0]);
+            if(i==0)
+            chk(5'd0,32'd0);
+            else
             chk(i[4:0], 32'hA5A50000 + i[4:0]);
         end
+
+        wr(5'd0, 32'hFFFF_FFFF);
+        wr(5'd0, 32'h0000_0001);
+        chk(5'd0, 32'd0);
 
         // two ports, different addresses
         @(negedge clk);
@@ -110,7 +116,7 @@ module tb_regfile;
         wr(5'd3, 32'h22222222);
         chk(5'd3, 32'h22222222);
 
-        // write is synchronous: old data before the edge, new data after
+
         wr(5'd9, 32'h0BADF00D);
         @(negedge clk);
         ra = 5'd9;
@@ -120,9 +126,9 @@ module tb_regfile;
         write_en = 1'b1;
         #1;
         checks = checks + 1;
-        if (rd1 !== 32'h0BADF00D) begin
+        if ((rd1 !== 32'h600DCAFE) || (rd2 !== 32'h600DCAFE)) begin
             errors = errors + 1;
-            $display("FAIL @%0t: r9 changed before edge rd1=%08h", $time, rd1);
+            $display("FAIL @%0t: no write-first bypass rd1=%08h rd2=%08h", $time, rd1, rd2);
         end
         @(negedge clk);
         write_en = 1'b0;

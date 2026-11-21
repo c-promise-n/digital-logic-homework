@@ -10,13 +10,15 @@ module regfile(
     output [31:0]ReadData1,
     output [31:0]ReadData2
     );
-
-    reg [31:0] regfile[31:0];
+    wire do_write = write_en & (WriteReg!=5'd0);
+    reg [31:0] regs[32];
     always@(posedge clk)begin
-        if(write_en)begin
-            regfile[WriteReg]<=WriteData;
+        if(do_write)begin
+            regs[WriteReg]<=WriteData;
         end
     end
-    assign ReadData1=regfile[ReadReg1];
-    assign ReadData2=regfile[ReadReg2];
+    assign ReadData1=(ReadReg1 == 5'd0)? 32'd0 :
+                    (do_write && (WriteReg==ReadReg1))?WriteData:regs[ReadReg1];
+    assign ReadData2=(ReadReg2 == 5'd0)? 32'd0 :
+                    (do_write && (WriteReg==ReadReg2))?WriteData:regs[ReadReg2];
 endmodule
