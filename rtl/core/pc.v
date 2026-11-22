@@ -30,9 +30,9 @@ module pc (
     //1'b0 for using +4 pc
     // 1'b1 for using input pc target
 
-    input [4:0] pc_target,    
+    input [31:0] pc_target,    
     // input target pc, in use when J-tpye instruction
-    output reg [4:0] pc_o
+    output reg [31:0] pc_o
     // 5 bits pc signal
 );
     always @(posedge clk) begin
