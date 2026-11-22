@@ -11,7 +11,7 @@ module regfile(
     output [31:0]ReadData2
     );
     wire do_write = write_en & (WriteReg!=5'd0);
-    reg [31:0] regs[32];
+    reg [31:0] regs[31:0];
     always@(posedge clk)begin
         if(do_write)begin
             regs[WriteReg]<=WriteData;
