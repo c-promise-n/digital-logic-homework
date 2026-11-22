@@ -39,6 +39,6 @@ module pc (
         if (pc_ctrl == 1'b1)
             pc_o <= pc_target;
         else 
-        pc_o <= pc + 5'd4;
+            pc_o <= pc_o + 5'd4;
     end
 endmodule
