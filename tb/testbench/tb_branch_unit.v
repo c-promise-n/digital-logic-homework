@@ -28,7 +28,7 @@ module tb_branch_unit;
         .rs1_data  (rs1_data),
         .rs2_data  (rs2_data),
         .imm       (imm),
-        .pc        (pc),
+        .inst_pc        (pc),
         .is_branch (branch),
         .branch_op (branch_op),
         .jump      (jump),

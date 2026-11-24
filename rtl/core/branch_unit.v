@@ -7,13 +7,13 @@ module branch_unit(
     input is_branch,
     input jump,
     input jalr,
-    input [31:0]pc,
+    input [31:0]inst_pc,
     input [31:0]imm,
     output[31:0]target,
     output taken
 );
 
-wire [31:0]pc_plus_imm = pc + imm;
+wire [31:0]pc_plus_imm = inst_pc + imm;
 wire [31:0]rs1_plus_imm = rs1_data + imm;
 wire is_eq = (rs1_data == rs2_data);
 wire lt_u  = (rs1_data < rs2_data);
