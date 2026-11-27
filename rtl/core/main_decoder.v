@@ -25,7 +25,7 @@ module main_decoder (
     output reg [1:0] result_src,
     // 00: ALU result
     // 01: Read Data
-    // 11: PC plus 4
+    // 10: PC plus 4
     output reg mem_write,   //active high
     output reg alu_srcA,    //1'b1:choose pc, 1'b0: choose rd1
     output reg alu_srcB,    //1'b1:choose immext, 1'b0: choose rd2
@@ -33,14 +33,17 @@ module main_decoder (
     output reg reg_write,   //active high
     output reg [1:0] alu_op,
     //same as book P260
-    //00: add, do NOT consider func3 and func7
+    //00: error
     //[do not use] 01: branch instru, use func3 to calculate branch_op
+    //01: add, do NOT consider func3 and func7
     //10: op and opim instru, consider func3 and func7
     //11: pass B
     output reg lsu_read,    //active high, control lsu mode
     output reg lsu_write,   //active high, control lsu mode
     output reg jump,        //active high. if JAL or JALR, active
-    output reg jalr         //active high. if JALR, active
+    output reg jalr,        //active high. if JALR, active
+
+    output reg illegal_op //actyive high
 );
     always @(*) begin
         case (op)
@@ -52,11 +55,12 @@ module main_decoder (
             alu_srcB = 1'b1;
             imm_src = `IMMSRC_I;
             reg_write = 1'b1;
-            alu_op = 2'b00;
+            alu_op = `ALU_OP_ADD;
             lsu_read = 1'b1;
             lsu_write = 1'b0;
             jump = 1'b0;
             jalr = 1'b0;
+            illegal_op = 1'b0;
         end
         `INST_OP_IMM: begin
             branch = 1'b0;
@@ -66,11 +70,12 @@ module main_decoder (
             alu_srcB = 1'b1;
             imm_src = `IMMSRC_I;
             reg_write = 1'b1;
-            alu_op = 2'b10;
+            alu_op = `ALU_OP_OP;
             lsu_read = 1'b0;
             lsu_write = 1'b0;
             jump = 1'b0;
             jalr = 1'b0;
+            illegal_op = 1'b0;
         end
         `INST_AUIPC: begin
             branch = 1'b0;
@@ -80,11 +85,12 @@ module main_decoder (
             alu_srcB = 1'b1;
             imm_src = `IMMSRC_U;
             reg_write = 1'b1;
-            alu_op = 2'b00;
+            alu_op = `ALU_OP_ADD;
             lsu_read = 1'b0;
             lsu_write = 1'b0;
             jump = 1'b0;
             jalr = 1'b0;
+            illegal_op = 1'b0;
         end
         `INST_STORE: begin
             branch = 1'b0;
@@ -94,11 +100,12 @@ module main_decoder (
             alu_srcB = 1'b1;
             imm_src = `IMMSRC_S;
             reg_write = 1'b0;
-            alu_op = 2'b00;
+            alu_op = `ALU_OP_ADD;
             lsu_read = 1'b0;
             lsu_write = 1'b1;
             jump = 1'b0;
             jalr = 1'b0;
+            illegal_op = 1'b0;
         end
         `INST_OP: begin
             branch = 1'b0;
@@ -106,13 +113,14 @@ module main_decoder (
             mem_write = 1'b0;
             alu_srcA = 1'b0;
             alu_srcB = 1'b0;
-            imm_src = `IMMSRC_X;
+            imm_src = `IMMSRC_0;
             reg_write = 1'b1;
-            alu_op = 2'b10;
+            alu_op = `ALU_OP_OP;
             lsu_read = 1'b0;
             lsu_write = 1'b0;
             jump = 1'b0;
             jalr = 1'b0;
+            illegal_op = 1'b0;
         end
         `INST_LUI: begin
             branch = 1'b0;
@@ -122,11 +130,12 @@ module main_decoder (
             alu_srcB = 1'b1;
             imm_src = `IMMSRC_U;
             reg_write = 1'b1;
-            alu_op = 2'b11;
+            alu_op = `ALU_OP_PASSB;
             lsu_read = 1'b0;
             lsu_write = 1'b0;
             jump = 1'b0;
             jalr = 1'b0;
+            illegal_op = 1'b0;
         end
         `INST_BRANCH: begin
             branch = 1'b1;
@@ -136,11 +145,12 @@ module main_decoder (
             alu_srcB = 1'b0;
             imm_src = `IMMSRC_B;
             reg_write = 1'b0;
-            alu_op = 2'b11;
+            alu_op = `ALU_OP_PASSB;
             lsu_read = 1'b0;
             lsu_write = 1'b0;
             jump = 1'b0;
             jalr = 1'b0;
+            illegal_op = 1'b0;
         end
         `INST_JALR: begin
             branch = 1'b0;
@@ -150,11 +160,12 @@ module main_decoder (
             alu_srcB = 1'b1;
             imm_src = `IMMSRC_I;
             reg_write = 1'b1;
-            alu_op = 2'b00;
+            alu_op = `ALU_OP_PASSB;
             lsu_read = 1'b0;
             lsu_write = 1'b0;
             jump = 1'b1;
             jalr = 1'b1;
+            illegal_op = 1'b0;
         end
         `INST_JAL: begin
             branch = 1'b0;
@@ -164,12 +175,29 @@ module main_decoder (
             alu_srcB = 1'b0;
             imm_src = `IMMSRC_J;
             reg_write = 1'b1;
-            alu_op = 2'b00;
+            alu_op = `ALU_OP_PASSB;
             lsu_read = 1'b0;
             lsu_write = 1'b0;
             jump = 1'b1;
             jalr = 1'b0;
+            illegal_op = 1'b0;
+        end
+        default: begin
+            branch = 1'b0;
+            result_src = 2'b00;
+            mem_write = 1'b0;
+            alu_srcA = 1'b0;
+            alu_srcB = 1'b0;
+            imm_src = `IMMSRC_0;
+            reg_write = 1'b0;
+            alu_op = `ALU_OP_ERROR;
+            lsu_read = 1'b0;
+            lsu_write = 1'b0;
+            jump = 1'b0;
+            jalr = 1'b0;
+            illegal_op = 1'b1;
         end
         endcase
+
     end
 endmodule

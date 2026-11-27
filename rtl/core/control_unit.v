@@ -21,11 +21,11 @@ module control_unit(
     input [14:12] func3,
     input func7_5,          //fucn7的第5位，risc32i仅使用fucn7的第5位
 
-    output [1:0] result_src,      //2'b00: alu result; 2'b01: RAM data; 2'b11, pc+4
+    output [1:0] result_src,      //2'b00: alu result; 2'b01: RAM data; 2'b10, pc+4
     output mem_write,       //active high
     output [3:0] alu_control,    //refer to defines.vh
-    output alu_srcA,        //1'b1:choose immext, 1'b0: choose rd2
-    output alu_srcB,        //1'b1:choose pc, 1'b0: choose rd2
+    output alu_srcA,        //1'b1:choose pc, 1'b0: choose rd2
+    output alu_srcB,        //1'b1:choose immext, 1'b0: choose rd2
     output [2:0] imm_src,   //refer to defines.vh
     output reg_write,       //active high
     output lsu_read,        //lsu read enable, active high
@@ -34,10 +34,12 @@ module control_unit(
     output jump,            //active high
     output jalr,            //active high
     output is_branch,       //active high
-    output [2:0] branch_op  //refer to defines.vh
+    output [2:0] branch_op, //refer to defines.vh
+    output illegal_inst
 );  
 
 wire [1:0] alu_op;
+wire illegal_op;
 main_decoder U1 (
     .op(op),
     .branch(is_branch),
@@ -51,17 +53,21 @@ main_decoder U1 (
     .lsu_read(lsu_read),
     .lsu_write(lsu_write),
     .jump(jump),
-    .jalr(jalr)
+    .jalr(jalr),
+    .illegal_op(illegal_op)
 );
-
+wire illegal_func;
 alu_decoder U2 (
     .op_5(op[5]),
     .func3(func3),
     .func7_5(func7_5),
     .alu_op(alu_op),
-    .alu_control(alu_control)
+    .alu_control(alu_control),
+    .illegal_func(illegal_func)
 );
 
+
+assign illegal_inst = illegal_func | illegal_op;
 assign lsu_func3 = func3;
 assign branch_op = func3;
 

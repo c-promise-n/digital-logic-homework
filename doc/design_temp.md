@@ -4,9 +4,7 @@
 
 
 ## 未实现
-1. target_MUX
-*（宋品逢 2026/11/23）* 为实现jalr指令，在PCtarget前边加一个数据选择器，控制信号为pctarget_src。1'b0：PC， 1'b1:RD1（最低位置0）.
-*（宋品逢 2026/11/27）* brancn_unit中已经定义好了，不需要实现了
+
 
 
 ## 已实现
@@ -25,3 +23,7 @@
 3. pc_src更新逻辑
 
 *（宋品逢 2026/11/23）* 为实现jal和jalr指令，pc_src= (zero & branch) | jump
+
+4. target_MUX
+*（宋品逢 2026/11/23）* 为实现jalr指令，在PCtarget前边加一个数据选择器，控制信号为pctarget_src。1'b0：PC， 1'b1:RD1（最低位置0）.
+*（宋品逢 2026/11/27）* brancn_unit中已经定义好了，不需要实现了

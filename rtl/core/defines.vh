@@ -36,7 +36,7 @@
 `define IMMSRC_B 3'b011     //B-type instruction
 `define IMMSRC_U 3'b100     //U-type instruction
 `define IMMSRC_J 3'b101     //J-type instruction
-`define IMMSRC_X 3'bxxx    //不需要立即数扩展，无关项
+`define IMMSRC_0 3'b000     //default value
 
 //指令类别编码
 `define INST_LOAD 7'b0000011   //加载
@@ -48,5 +48,11 @@
 `define INST_BRANCH 7'b1100011 //条件分支
 `define INST_JALR 7'b1100111   //间接跳转并链接（Jump and Link Register）
 `define INST_JAL 7'b1101111    //直接跳转并链接（Jump and Link）
+
+//译码器内部ALU_OP（与ALU单元无关）
+`define ALU_OP_ERROR 2'b00
+`define ALU_OP_ADD 2'b01
+`define ALU_OP_OP 2'b10
+`define ALU_OP_PASSB 2'b11
 
 `endif

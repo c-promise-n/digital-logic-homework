@@ -21,9 +21,10 @@
 module alu_decoder (
     input op_5,             //第六位op[5]，用于判断是否为sub指令
     input [2:0] func3,
-    input func7_5,
+    input [6:0] func7_5,
     input [1:0] alu_op,
-    output reg [3:0] alu_control
+    output reg [3:0] alu_control,
+    output reg illegal_func //active high
 );
 
 wire is_Rsub;               // if input is R-tpye sub, or branch type, active
@@ -31,31 +32,77 @@ assign is_Rsub = op_5 & func7_5;
 
 always @(*) begin
     case(alu_op)
-    2'b00: alu_control = `ALU_ADD;
-    2'b10: begin
+    `ALU_OP_ADD: begin
+        alu_control = `ALU_ADD;
+        illegal_func = 1'b0;
+    end
+
+    `ALU_OP_PASSB: begin 
+        alu_control = `ALU_PASS_B;
+        illegal_func = 1'b0;
+    end
+
+    `ALU_OP_OP: begin
         case (func3)
+
         3'b000: begin
         if (is_Rsub)
-        alu_control = `ALU_SUB;
+            alu_control = `ALU_SUB;
         else
-        alu_control = `ALU_ADD;
+            alu_control = `ALU_ADD;
+
+        illegal_func = 1'b0;
         end
-        3'b001: alu_control = `ALU_SLL;
-        3'b010: alu_control = `ALU_SLT;
-        3'b011: alu_control = `ALU_SLTU;
-        3'b100: alu_control = `ALU_XOR;
+
+        3'b001: begin 
+            alu_control = `ALU_SLL;
+            illegal_func = 1'b0;
+        end
+
+        3'b010: begin 
+            alu_control = `ALU_SLT;
+            illegal_func = 1'b0;
+        end
+
+        3'b011: begin 
+            alu_control = `ALU_SLTU;
+            illegal_func = 1'b0;
+        end
+
+        3'b100: begin 
+            alu_control = `ALU_XOR;
+            illegal_func = 1'b0;
+        end
+
         3'b101: begin
             if (func7_5)
                 alu_control = `ALU_SRA;
             else
                 alu_control = `ALU_SRL;
+
+            illegal_func = 1'b0;
         end
-        3'b110: alu_control = `ALU_OR;
-        3'b111: alu_control = `ALU_AND;
+
+        3'b110: begin
+            alu_control = `ALU_OR;
+            illegal_func = 1'b0;
+        end
+
+        3'b111: begin 
+            alu_control = `ALU_AND;
+            illegal_func = 1'b0;
+        end
+
+        default: begin 
+            alu_control = `ALU_PASS_B;
+            illegal_func = 1'b1;
+        end
         endcase
     end
-    2'b11: alu_control = `ALU_PASS_B;
-    default: alu_control = `ALU_PASS_B;
+    default: begin 
+        alu_control = `ALU_PASS_B;
+        illegal_func = 1'b1;
+    end
     endcase
 end
 endmodule
