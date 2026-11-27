@@ -22,7 +22,6 @@ module control_unit(
     input func7_5,          //fucn7的第5位，risc32i仅使用fucn7的第5位
     input zero,
 
-    output pc_src,          //1'b0: pc+4; 1'b1: pc target
     output [1:0] result_src,      //2'b00: alu result; 2'b01: RAM data; 2'b11, pc+4
     output mem_write,       //active high
     output [3:0] alu_control,    //refer to defines.vh
@@ -33,14 +32,16 @@ module control_unit(
     output lsu_read,        //lsu read enable, active high
     output lsu_write,       //lsu write rnable, active high
     output [2:0] lsu_func3, //lsu func3 input, same as func3
-    output pctarget_src     //control pac target MUX, active high
+    output jump,            //active high
+    output jalr,            //active high
+    output is_branch,       //active high
+    output [2:0] branch_op  //refer to defines.vh
 );  
-wire branch;
-wire jump;
+
 wire [1:0] alu_op;
 main_decoder U1 (
     .op(op),
-    .branch(branch),
+    .branch(is_branch),
     .result_src(result_src),
     .mem_write(mem_write),
     .alu_srcA(alu_srcA),
@@ -51,7 +52,7 @@ main_decoder U1 (
     .lsu_read(lsu_read),
     .lsu_write(lsu_write),
     .jump(jump),
-    .pctarget_src(pctarget_src)
+    .jalr(jalr)
 );
 
 alu_decoder U2 (
@@ -62,20 +63,8 @@ alu_decoder U2 (
     .alu_control(alu_control)
 );
 
-wire branch_check;// check if meet branch conditions, active high
-assign branch_check = func3[2] ^ func3[0] ^ zero;
-/*why this expression?
-func3       instru      alu action      zero=?when meet condition
-000         beq         sub             1
-001         bne         sub             0
-100         blt         slt             0
-101         bge         slt             1
-110         bltu        sltu            0
-111         bgeu        sltu            1
-*/
-
-assign pc_src = (branch_check & branch) | jump;
 assign lsu_func3 = func3;
+assign branch_op = func3;
 
 
 

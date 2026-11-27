@@ -27,16 +27,13 @@ module alu_decoder (
 );
 
 wire is_Rsub;               // if input is R-tpye sub, or branch type, active
-assign is_Rsub = (alu_op == 2'b01)? 1'b0: op_5 & func7_5;
+assign is_Rsub = op_5 & func7_5;
 
-wire func3_r;
-assign func3_r = (alu_op == 2'b01)? {1'b0,func3[2:1]} : func3;
 always @(*) begin
     case(alu_op)
     2'b00: alu_control = `ALU_ADD;
-    2'b11: alu_control = `ALU_PASS_B;
-    2'b01, 2'b10: begin
-        case (func3_r)
+    2'b10: begin
+        case (func3)
         3'b000: begin
         if (is_Rsub)
         alu_control = `ALU_SUB;
@@ -57,6 +54,8 @@ always @(*) begin
         3'b111: alu_control = `ALU_AND;
         endcase
     end
+    2'b11: alu_control = `ALU_PASS_B;
+    default: alu_control = `ALU_PASS_B;
     endcase
 end
 endmodule

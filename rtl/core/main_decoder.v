@@ -34,13 +34,13 @@ module main_decoder (
     output reg [1:0] alu_op,
     //same as book P260
     //00: add, do NOT consider func3 and func7
-    //01: branch instru, use func3[2:1] and func[0]
+    //[do not use] 01: branch instru, use func3 to calculate branch_op
     //10: op and opim instru, consider func3 and func7
     //11: pass B
     output reg lsu_read,    //active high, control lsu mode
     output reg lsu_write,   //active high, control lsu mode
     output reg jump,        //active high. if JAL or JALR, active
-    output reg pctarget_src //active high. 1'b0:pc, 1'b1:RD1(最低位置0).
+    output reg jalr         //active high. if JALR, active
 );
     always @(*) begin
         case (op)
@@ -56,7 +56,7 @@ module main_decoder (
             lsu_read = 1'b1;
             lsu_write = 1'b0;
             jump = 1'b0;
-            pctarget_src = 1'b0;
+            jalr = 1'b0;
         end
         `INST_OP_IMM: begin
             branch = 1'b0;
@@ -70,7 +70,7 @@ module main_decoder (
             lsu_read = 1'b0;
             lsu_write = 1'b0;
             jump = 1'b0;
-            pctarget_src = 1'b0;
+            jalr = 1'b0;
         end
         `INST_AUIPC: begin
             branch = 1'b0;
@@ -84,7 +84,7 @@ module main_decoder (
             lsu_read = 1'b0;
             lsu_write = 1'b0;
             jump = 1'b0;
-            pctarget_src = 1'b0;
+            jalr = 1'b0;
         end
         `INST_STORE: begin
             branch = 1'b0;
@@ -98,7 +98,7 @@ module main_decoder (
             lsu_read = 1'b0;
             lsu_write = 1'b1;
             jump = 1'b0;
-            pctarget_src = 1'b0;
+            jalr = 1'b0;
         end
         `INST_OP: begin
             branch = 1'b0;
@@ -112,7 +112,7 @@ module main_decoder (
             lsu_read = 1'b0;
             lsu_write = 1'b0;
             jump = 1'b0;
-            pctarget_src = 1'b0;
+            jalr = 1'b0;
         end
         `INST_LUI: begin
             branch = 1'b0;
@@ -126,7 +126,7 @@ module main_decoder (
             lsu_read = 1'b0;
             lsu_write = 1'b0;
             jump = 1'b0;
-            pctarget_src = 1'b0;
+            jalr = 1'b0;
         end
         `INST_BRANCH: begin
             branch = 1'b1;
@@ -136,11 +136,11 @@ module main_decoder (
             alu_srcB = 1'b0;
             imm_src = `IMMSRC_B;
             reg_write = 1'b0;
-            alu_op = 2'b01;
+            alu_op = 2'b11;
             lsu_read = 1'b0;
             lsu_write = 1'b0;
             jump = 1'b0;
-            pctarget_src = 1'b0;
+            jalr = 1'b0;
         end
         `INST_JALR: begin
             branch = 1'b0;
@@ -154,7 +154,7 @@ module main_decoder (
             lsu_read = 1'b0;
             lsu_write = 1'b0;
             jump = 1'b1;
-            pctarget_src = 1'b1;
+            jalr = 1'b1;
         end
         `INST_JAL: begin
             branch = 1'b0;
@@ -168,7 +168,7 @@ module main_decoder (
             lsu_read = 1'b0;
             lsu_write = 1'b0;
             jump = 1'b1;
-            pctarget_src = 1'b0;
+            jalr = 1'b0;
         end
         endcase
     end

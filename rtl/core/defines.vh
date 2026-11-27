@@ -18,10 +18,10 @@
 
 `define BR_BEQ 3'b000   // rs1 == rs2
 `define BR_BNE 3'b001   // rs1 != rs2
-`define BR_BLT 3'b010   // $signed(rs1) <  $signed(rs2)
-`define BR_BGE 3'b011   // $signed(rs1) >= $signed(rs2)
-`define BR_BLTU 3'b100   // rs1 <  rs2  (unsigned)
-`define BR_BGEU 3'b101   // rs1 >= rs2  (unsigned)
+`define BR_BLT 3'b100   // $signed(rs1) <  $signed(rs2)
+`define BR_BGE 3'b101   // $signed(rs1) >= $signed(rs2)
+`define BR_BLTU 3'b110   // rs1 <  rs2  (unsigned)
+`define BR_BGEU 3'b111   // rs1 >= rs2  (unsigned)
 
 //immsrc编码
 `define IMMSRC_I 3'b000     //I-type instruction
