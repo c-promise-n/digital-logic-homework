@@ -19,4 +19,8 @@
 `define BR_BGE 3'b011   // $signed(rs1) >= $signed(rs2)
 `define BR_BLTU 3'b100   // rs1 <  rs2  (unsigned)
 `define BR_BGEU 3'b101   // rs1 >= rs2  (unsigned)
+
+`define FWD_NONE       2'b00    //id_ex_rs1_data / id_ex_rs2_data
+`define FWD_EX_MEM     2'b01    //ex_mem_alu_result
+`define FWD_MEM_WB     2'b10    //mem_wb_wdata
 `endif
