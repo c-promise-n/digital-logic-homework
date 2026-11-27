@@ -15,7 +15,7 @@
 `define ALU_PASS_B 4'b1010  // result = b           (lui)
 `define ALU_MULDIV 4'b1111
 
-
+//branch_unit op
 `define BR_BEQ 3'b000   // rs1 == rs2
 `define BR_BNE 3'b001   // rs1 != rs2
 `define BR_BLT 3'b100   // $signed(rs1) <  $signed(rs2)

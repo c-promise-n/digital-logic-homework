@@ -20,7 +20,6 @@ module control_unit(
     input [6:0] op,
     input [14:12] func3,
     input func7_5,          //fucn7的第5位，risc32i仅使用fucn7的第5位
-    input zero,
 
     output [1:0] result_src,      //2'b00: alu result; 2'b01: RAM data; 2'b11, pc+4
     output mem_write,       //active high
