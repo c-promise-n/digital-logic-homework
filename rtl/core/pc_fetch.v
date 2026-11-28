@@ -23,7 +23,7 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
-module pc (
+module pc_fetch (
     input clk,
     input pc_ctrl,      
     // control signal from controller
@@ -39,6 +39,6 @@ module pc (
         if (pc_ctrl == 1'b1)
             pc_o <= pc_target;
         else 
-            pc_o <= pc_o + 5'd4;
+            pc_o <= pc_o + 32'd4;
     end
 endmodule
