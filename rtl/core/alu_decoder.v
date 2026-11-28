@@ -21,14 +21,14 @@
 module alu_decoder (
     input op_5,             //第六位op[5]，用于判断是否为sub指令
     input [2:0] func3,
-    input [6:0] func7_5,
+    input [6:0] func7,
     input [1:0] alu_op,
     output reg [3:0] alu_control,
     output reg illegal_func //active high
 );
 
 wire is_Rsub;               // if input is R-tpye sub, or branch type, active
-assign is_Rsub = op_5 & func7_5;
+assign is_Rsub = op_5 & func7[5];
 
 always @(*) begin
     case(alu_op)
@@ -75,7 +75,7 @@ always @(*) begin
         end
 
         3'b101: begin
-            if (func7_5)
+            if (func7[5])
                 alu_control = `ALU_SRA;
             else
                 alu_control = `ALU_SRL;

@@ -39,7 +39,6 @@ module main_decoder (
     //10: op and opim instru, consider func3 and func7
     //11: pass B
     output reg lsu_read,    //active high, control lsu mode
-    output reg lsu_write,   //active high, control lsu mode
     output reg jump,        //active high. if JAL or JALR, active
     output reg jalr,        //active high. if JALR, active
 
@@ -57,7 +56,6 @@ module main_decoder (
             reg_write = 1'b1;
             alu_op = `ALU_OP_ADD;
             lsu_read = 1'b1;
-            lsu_write = 1'b0;
             jump = 1'b0;
             jalr = 1'b0;
             illegal_op = 1'b0;
@@ -72,7 +70,6 @@ module main_decoder (
             reg_write = 1'b1;
             alu_op = `ALU_OP_OP;
             lsu_read = 1'b0;
-            lsu_write = 1'b0;
             jump = 1'b0;
             jalr = 1'b0;
             illegal_op = 1'b0;
@@ -87,7 +84,6 @@ module main_decoder (
             reg_write = 1'b1;
             alu_op = `ALU_OP_ADD;
             lsu_read = 1'b0;
-            lsu_write = 1'b0;
             jump = 1'b0;
             jalr = 1'b0;
             illegal_op = 1'b0;
@@ -102,7 +98,6 @@ module main_decoder (
             reg_write = 1'b0;
             alu_op = `ALU_OP_ADD;
             lsu_read = 1'b0;
-            lsu_write = 1'b1;
             jump = 1'b0;
             jalr = 1'b0;
             illegal_op = 1'b0;
@@ -117,7 +112,6 @@ module main_decoder (
             reg_write = 1'b1;
             alu_op = `ALU_OP_OP;
             lsu_read = 1'b0;
-            lsu_write = 1'b0;
             jump = 1'b0;
             jalr = 1'b0;
             illegal_op = 1'b0;
@@ -132,7 +126,6 @@ module main_decoder (
             reg_write = 1'b1;
             alu_op = `ALU_OP_PASSB;
             lsu_read = 1'b0;
-            lsu_write = 1'b0;
             jump = 1'b0;
             jalr = 1'b0;
             illegal_op = 1'b0;
@@ -147,7 +140,6 @@ module main_decoder (
             reg_write = 1'b0;
             alu_op = `ALU_OP_PASSB;
             lsu_read = 1'b0;
-            lsu_write = 1'b0;
             jump = 1'b0;
             jalr = 1'b0;
             illegal_op = 1'b0;
@@ -162,7 +154,6 @@ module main_decoder (
             reg_write = 1'b1;
             alu_op = `ALU_OP_PASSB;
             lsu_read = 1'b0;
-            lsu_write = 1'b0;
             jump = 1'b1;
             jalr = 1'b1;
             illegal_op = 1'b0;
@@ -177,7 +168,6 @@ module main_decoder (
             reg_write = 1'b1;
             alu_op = `ALU_OP_PASSB;
             lsu_read = 1'b0;
-            lsu_write = 1'b0;
             jump = 1'b1;
             jalr = 1'b0;
             illegal_op = 1'b0;
@@ -192,7 +182,6 @@ module main_decoder (
             reg_write = 1'b0;
             alu_op = `ALU_OP_ERROR;
             lsu_read = 1'b0;
-            lsu_write = 1'b0;
             jump = 1'b0;
             jalr = 1'b0;
             illegal_op = 1'b1;

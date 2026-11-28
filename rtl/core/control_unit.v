@@ -19,7 +19,7 @@
 module control_unit(
     input [6:0] op,
     input [14:12] func3,
-    input func7_5,          //fucn7的第5位，risc32i仅使用fucn7的第5位
+    input [6:0] func7,      //fucn7的第5位，risc32i仅使用fucn7的第5位
 
     output [1:0] result_src,      //2'b00: alu result; 2'b01: RAM data; 2'b10, pc+4
     output mem_write,       //active high
@@ -29,7 +29,6 @@ module control_unit(
     output [2:0] imm_src,   //refer to defines.vh
     output reg_write,       //active high
     output lsu_read,        //lsu read enable, active high
-    output lsu_write,       //lsu write rnable, active high
     output [2:0] lsu_func3, //lsu func3 input, same as func3
     output jump,            //active high
     output jalr,            //active high
@@ -51,7 +50,6 @@ main_decoder U1 (
     .reg_write(reg_write),
     .alu_op(alu_op),
     .lsu_read(lsu_read),
-    .lsu_write(lsu_write),
     .jump(jump),
     .jalr(jalr),
     .illegal_op(illegal_op)
@@ -60,7 +58,7 @@ wire illegal_func;
 alu_decoder U2 (
     .op_5(op[5]),
     .func3(func3),
-    .func7_5(func7_5),
+    .func7(func7),
     .alu_op(alu_op),
     .alu_control(alu_control),
     .illegal_func(illegal_func)
