@@ -15,7 +15,7 @@ module tb_alu_decoder;
     alu_decoder u_dut (
         .op_5(op_5),
         .func3(func3),
-        .func7_5(func7),
+        .func7(func7),
         .alu_op(alu_op),
         .alu_control(alu_control),
         .illegal_func(illegal_func)

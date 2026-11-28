@@ -42,7 +42,7 @@ module main_decoder (
     output reg jump,        //active high. if JAL or JALR, active
     output reg jalr,        //active high. if JALR, active
 
-    output reg illegal_op //actyive high
+    output reg illegal_op //active high
 );
     always @(*) begin
         case (op)

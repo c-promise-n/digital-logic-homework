@@ -12,6 +12,8 @@
 // Revision:
 // - Revision 0.0.1 2026/11/22
 //      暂未实现SYSTEM和MISC-MEM指令
+// - Revision 0.0.2 2026/11/28
+//      传入func7全部内容，但目前仅仅使用第六位。目前没有对所有func3和func7进行校验。
 // Additional Comments:
 // 目前实现的是单周期处理器的功能，见P259
 //////////////////////////////////////////////////////////////////////////////////
@@ -19,7 +21,7 @@
 module control_unit(
     input [6:0] op,
     input [14:12] func3,
-    input [6:0] func7,      //fucn7的第5位，risc32i仅使用fucn7的第5位
+    input [6:0] func7,      //fucn7，risc32i仅使用fucn7的第6位
 
     output [1:0] result_src,      //2'b00: alu result; 2'b01: RAM data; 2'b10, pc+4
     output mem_write,       //active high
