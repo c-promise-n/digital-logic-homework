@@ -105,11 +105,11 @@ module tb_control_unit;
 
         chk(7'b0001111,3'b000,7'b0000000,2'b00,0,`ALU_PASS_B,0,0,`IMMSRC_0,0,0,0,0,0,1,"UNKNOWN OPCODE");
 
-        // Coverage for still-unchecked funct3 / illegal instruction cases.
-        chk(`INST_LOAD,3'b011,7'b0000000,2'b01,0,`ALU_ADD,0,1,`IMMSRC_I,1,1,0,0,0,1,"ILLEGAL LOAD FUNCT3");
-        chk(`INST_STORE,3'b011,7'b0000000,2'b00,1,`ALU_ADD,0,1,`IMMSRC_S,0,0,0,0,0,1,"ILLEGAL STORE FUNCT3");
-        chk(`INST_BRANCH,3'b010,7'b0000000,2'b00,0,`ALU_PASS_B,0,0,`IMMSRC_B,0,0,0,0,1,1,"ILLEGAL BRANCH FUNCT3");
-        chk(`INST_JALR,3'b001,7'b0000000,2'b10,0,`ALU_PASS_B,0,1,`IMMSRC_I,1,0,1,1,0,1,"ILLEGAL JALR FUNCT3");
+        // Illegal func3 encodings must disable the corresponding side effects.
+        chk(`INST_LOAD,3'b011,7'b0000000,2'b00,0,`ALU_PASS_B,0,0,`IMMSRC_0,0,0,0,0,0,1,"ILLEGAL LOAD FUNCT3");
+        chk(`INST_STORE,3'b011,7'b0000000,2'b00,0,`ALU_PASS_B,0,0,`IMMSRC_0,0,0,0,0,0,1,"ILLEGAL STORE FUNCT3");
+        chk(`INST_BRANCH,3'b010,7'b0000000,2'b00,0,`ALU_PASS_B,0,0,`IMMSRC_0,0,0,0,0,0,1,"ILLEGAL BRANCH FUNCT3");
+        chk(`INST_JALR,3'b001,7'b0000000,2'b00,0,`ALU_PASS_B,0,0,`IMMSRC_0,0,0,0,0,0,1,"ILLEGAL JALR FUNCT3");
 
         if (errors == 16'd0)
             $display("PASS: control_unit, %0d checks, 0 errors", checks);

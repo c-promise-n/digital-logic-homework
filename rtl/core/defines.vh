@@ -55,4 +55,18 @@
 `define ALU_OP_OP 2'b10
 `define ALU_OP_PASSB 2'b11
 
+
+//错误的func3值
+`define FUNC3_E_LOAD_1 3'b011
+`define FUNC3_E_LOAD_2 3'b110
+`define FUNC3_E_LOAD_3 3'b111
+
+`define FUNC3_C_STORE_1 3'b000
+`define FUNC3_C_STORE_2 3'b001
+`define FUNC3_C_STORE_3 3'b010
+
+`define FUNC3_E_BRANCH_1 3'b010
+`define FUNC3_E_BRANCH_2 3'b011
+
+`define FUNC3_C_JALR 3'b000
 `endif

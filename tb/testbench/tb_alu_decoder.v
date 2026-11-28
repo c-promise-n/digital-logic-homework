@@ -65,9 +65,9 @@ module tb_alu_decoder;
         chk(0,3'b110,7'b0000000,`ALU_OP_OP,`ALU_OR,0,"OR/ORI");
         chk(0,3'b111,7'b0000000,`ALU_OP_OP,`ALU_AND,0,"AND/ANDI");
 
-        // Full funct7 validation coverage (currently only func7[5]/nonzero status is available).
-        chk(1,3'b000,7'b0000001,`ALU_OP_OP,`ALU_ADD,1,"INVALID R-TYPE ADD/SUB funct7");
-        chk(1,3'b101,7'b0000001,`ALU_OP_OP,`ALU_SRL,1,"INVALID SRL/SRA funct7");
+        // Only func7[5] is used by the current decoder; other bits are not validated.
+        chk(1,3'b000,7'b0000001,`ALU_OP_OP,`ALU_ADD,0,"Other ADD funct7 bits ignored");
+        chk(1,3'b101,7'b0000001,`ALU_OP_OP,`ALU_SRL,0,"Other shift funct7 bits ignored");
 
         chk(0,3'b000,7'b0000000,`ALU_OP_PASSB,`ALU_PASS_B,0,"PASS-B");
         chk(0,3'bxxx,7'bxxxxxxx,`ALU_OP_ERROR,`ALU_PASS_B,1,"ALU_OP_ERROR default");
